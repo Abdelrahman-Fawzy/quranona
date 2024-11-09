@@ -1,0 +1,511 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Cairo", sans-serif;
+  direction: rtl;
+}
+
+// start framework
+section:not(.main-section) {
+  padding: 70px 0;
+  .flex-box {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    h3 {
+      font-size: 26px;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        height: 2px;
+      }
+      &::before {
+        width: 100%;
+        background-color: #607d8b;
+        bottom: -10px;
+      }
+      &::after {
+        width: 60%;
+        background-color: #607d8b;
+        bottom: -19px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  }
+}
+
+button.scroll-to-top {
+  position: fixed;
+  bottom: -60px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  border: none;
+  border-radius: 50%;
+  background: #607d8b;
+  color: #FFF;
+  z-index: 10;
+  transition: 0.5s;
+}
+// end framework
+
+// start header
+header.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  transition: all 0.5s;
+  z-index: 9;
+  .title {
+    a {
+      color: #FFF;
+      font-family: "thuluth-decorated";
+      font-size: 50px;
+    }
+  }
+  .links {
+    ul {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      li {
+        position: relative;
+        padding-bottom: 10px;
+        cursor: pointer;
+        color: #FFF;
+        &::before {
+          content: "";
+          background: #FFF;
+          height: 2px;
+          display: block;
+          bottom: 0px;
+          position: absolute;
+          width: 0;
+          transition: 0.5s;
+        }
+        &.active,
+        &:hover {
+          &::before {
+            width: 100%;
+          }
+        }
+      }
+    }
+    &.responsive {
+      position: fixed;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s;
+      ul {
+        flex-direction: column;
+      }
+      button.close {
+        position: fixed;
+        top: 30px;
+        right: 30px;
+        background: transparent;
+        border: none;
+        font-size: 33px;
+        color: #FFF;
+        display: none;
+      }
+      &.active {
+        top: 0;
+        z-index: 10;
+        ul {
+          display: flex;
+        }
+        button.close {
+          display: block;
+        }
+      }
+    }
+  }
+  button.toggler {
+    background: transparent;
+    border: 1px solid #FFF;
+    color: #FFF;
+    border-radius: 4px;
+    padding: 7px;
+    font-size: 24px;
+  }
+  &.active {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #FFF;
+    a {
+      color: #FFF;
+    }
+    .links ul li::before {
+      background: #fff;
+    }
+  }
+}
+// end header
+
+// start main section
+section.main-section {
+  background-image: url('./background.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  position: relative;
+  .flex-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1.5em;
+    z-index: 3;
+    position: relative;
+    h2 {
+      color: #FFF;
+      font-size: 40px;
+      span {
+        font-family: "thuluth-decorated";
+        font-size: 50px;
+      }
+    }
+    button {
+      background: transparent;
+      border: 2px solid #FFF;
+      color: #FFF;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      span, i {
+        z-index: 3;
+      }
+      &::before {
+        content: "";
+        background: #FFF;
+        width: 0;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: #444;
+        z-index: 1;
+        transition: 0.5s;
+      }
+      &:hover {
+        &::before {
+          width: 100%;
+        }
+        span, i {
+          color: #444;
+        }
+      }
+    }
+  }
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+}
+// end main section
+
+// start quran section
+section.quran-section {
+  .surahs-box {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    .surah {
+      box-shadow: rgba(14, 63, 126, 0.06) 0px 0px 0px 1px, rgba(42, 51, 70, 0.03) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 2px 2px -1px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.03) 0px 5px 5px -2.5px, rgba(42, 51, 70, 0.03) 0px 10px 10px -5px, rgba(42, 51, 70, 0.03) 0px 24px 24px -8px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 115px;
+      min-width: 140px;
+      cursor: pointer;
+      p {
+        margin: 0;
+      }
+    }
+  }
+  .ayat-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    width: 0;
+    height: 100%;
+    z-index: 999;
+    transition: all 0.5s;
+    overflow-y: auto;
+    background-color: #FFF;
+    &.active {
+      width: 100%;
+    }
+    .box {
+      padding: 2em;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      button.close {
+        background: transparent;
+        border: none;
+        font-size: 33px;
+        position: sticky;
+        top: 0;
+      }
+      ul {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        li {
+          width: 100%;
+          text-align: center;
+          padding-bottom: 10px;
+          &:not(:last-child) {
+            border-bottom: 1px solid #607d8b;
+          }
+        }
+      }
+    }
+  }
+}
+// end quran section
+
+// start hadith box
+section.hadith-section {
+  .hadith-box {
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+    padding: 2em;
+    position: relative;
+    q {
+      display: block;
+      margin-top: 20px;
+      font-size: 22px;
+      overflow-wrap: break-word;
+    }
+    .hadith-number {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: #607d8b;
+      color: #FFF;
+      padding: 10px;
+    }
+  }
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    button {
+      display: flex;
+      padding: 10px 16px;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      border-radius: 4px;
+      position: relative;
+      min-width: 110px;
+      span, i {
+        z-index: 3;
+      }
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 0;
+        height: 100%;
+        border-radius: 4px;
+        z-index: 1;
+        transition: 0.5s;
+      }
+      &.next {
+        background-color: #607d8b;
+        border: 1px solid #607d8b;
+        color: #FFF;
+        &::before {
+          left: 0;
+        }
+        &:hover {
+          &::before {
+            width: 100%;
+            background-color: #FFF;
+          }
+          span, i {
+            color: #607d8b;
+          }
+        }
+      }
+      &.prev {
+        background-color: transparent;
+        border: 1px solid #607d8b;
+        color: #607d8b;
+        &::before {
+          right: 0;
+        }
+        &:hover {
+          &::before {
+            width: 100%;
+            background-color: #607d8b;
+          }
+          span, i {
+            color: #FFF;
+          }
+        }
+      }
+    }
+  }
+}
+// end hadith box
+
+// start prayers section
+section.prayers-section {
+  .prayers {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    .pray-time {
+      box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+      padding: 1em;
+      width: calc(97% / 3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1em;
+      .time {
+        border: 3px solid #607d8b;
+        padding: 15px;
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+      }
+      .name {
+        font-size: 35px;
+        text-transform: capitalize;
+      }
+    }
+  }
+}
+// end prayers section
+
+// start responsive
+// XX-Large devices (larger desktops, 1400px and up)
+@media (max-width: 1400px) { 
+  section.quran-section {
+    .surahs-box {
+      .surah {
+        width: calc(100% / 9);
+      }
+    }
+  }
+}
+
+// X-Large devices (large desktops, 1200px and up)
+@media (max-width: 1200px) { 
+  section.quran-section {
+    .surahs-box {
+      .surah {
+        width: calc(100% / 6);
+      }
+    }
+  } 
+}
+
+// Large devices (desktops, 992px and up)
+@media (max-width: 992px) { 
+  section.quran-section {
+    .surahs-box {
+      .surah {
+        width: calc(100% / 5);
+      }
+    }
+  } 
+
+  section.prayers-section {
+    .prayers {
+      .pray-time {
+        width: calc(97% / 2);
+        .name {
+          font-size: 26px;
+        }
+      }
+    }
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (max-width: 768px) { 
+  section.quran-section {
+    .surahs-box {
+      .surah {
+        width: 100%;
+      }
+    }
+  }
+
+  section.prayers-section {
+    .prayers {
+      .pray-time {
+        width: 100%;
+        .name {
+          font-size: 26px;
+        }
+      }
+    }
+  }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (max-width: 576px) {  }
+
+
+
+
+
+
+
+
+// end responsive

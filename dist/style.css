@@ -1,0 +1,435 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Cairo", sans-serif;
+  direction: rtl;
+}
+
+section:not(.main-section) {
+  padding: 70px 0;
+}
+section:not(.main-section) .flex-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+section:not(.main-section) .header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+section:not(.main-section) .header h3 {
+  font-size: 26px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+section:not(.main-section) .header h3::before, section:not(.main-section) .header h3::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+}
+section:not(.main-section) .header h3::before {
+  width: 100%;
+  background-color: #607d8b;
+  bottom: -10px;
+}
+section:not(.main-section) .header h3::after {
+  width: 60%;
+  background-color: #607d8b;
+  bottom: -19px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+button.scroll-to-top {
+  position: fixed;
+  bottom: -60px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  border: none;
+  border-radius: 50%;
+  background: #607d8b;
+  color: #FFF;
+  z-index: 10;
+  transition: 0.5s;
+}
+
+header.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  transition: all 0.5s;
+  z-index: 9;
+}
+header.navbar .title a {
+  color: #FFF;
+  font-family: "thuluth-decorated";
+  font-size: 50px;
+}
+header.navbar .links ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+header.navbar .links ul li {
+  position: relative;
+  padding-bottom: 10px;
+  cursor: pointer;
+  color: #FFF;
+}
+header.navbar .links ul li::before {
+  content: "";
+  background: #FFF;
+  height: 2px;
+  display: block;
+  bottom: 0px;
+  position: absolute;
+  width: 0;
+  transition: 0.5s;
+}
+header.navbar .links ul li.active::before, header.navbar .links ul li:hover::before {
+  width: 100%;
+}
+header.navbar .links.responsive {
+  position: fixed;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s;
+}
+header.navbar .links.responsive ul {
+  flex-direction: column;
+}
+header.navbar .links.responsive button.close {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  background: transparent;
+  border: none;
+  font-size: 33px;
+  color: #FFF;
+  display: none;
+}
+header.navbar .links.responsive.active {
+  top: 0;
+  z-index: 10;
+}
+header.navbar .links.responsive.active ul {
+  display: flex;
+}
+header.navbar .links.responsive.active button.close {
+  display: block;
+}
+header.navbar button.toggler {
+  background: transparent;
+  border: 1px solid #FFF;
+  color: #FFF;
+  border-radius: 4px;
+  padding: 7px;
+  font-size: 24px;
+}
+header.navbar.active {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #FFF;
+}
+header.navbar.active a {
+  color: #FFF;
+}
+header.navbar.active .links ul li::before {
+  background: #fff;
+}
+
+section.main-section {
+  background-image: url("./background.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  position: relative;
+}
+section.main-section .flex-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1.5em;
+  z-index: 3;
+  position: relative;
+}
+section.main-section .flex-box h2 {
+  color: #FFF;
+  font-size: 40px;
+}
+section.main-section .flex-box h2 span {
+  font-family: "thuluth-decorated";
+  font-size: 50px;
+}
+section.main-section .flex-box button {
+  background: transparent;
+  border: 2px solid #FFF;
+  color: #FFF;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+section.main-section .flex-box button span, section.main-section .flex-box button i {
+  z-index: 3;
+}
+section.main-section .flex-box button::before {
+  content: "";
+  background: #FFF;
+  width: 0;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #444;
+  z-index: 1;
+  transition: 0.5s;
+}
+section.main-section .flex-box button:hover::before {
+  width: 100%;
+}
+section.main-section .flex-box button:hover span, section.main-section .flex-box button:hover i {
+  color: #444;
+}
+section.main-section .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+section.quran-section .surahs-box {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+section.quran-section .surahs-box .surah {
+  box-shadow: rgba(14, 63, 126, 0.06) 0px 0px 0px 1px, rgba(42, 51, 70, 0.03) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 2px 2px -1px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.03) 0px 5px 5px -2.5px, rgba(42, 51, 70, 0.03) 0px 10px 10px -5px, rgba(42, 51, 70, 0.03) 0px 24px 24px -8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 115px;
+  min-width: 140px;
+  cursor: pointer;
+}
+section.quran-section .surahs-box .surah p {
+  margin: 0;
+}
+section.quran-section .ayat-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  width: 0;
+  height: 100%;
+  z-index: 999;
+  transition: all 0.5s;
+  overflow-y: auto;
+  background-color: #FFF;
+}
+section.quran-section .ayat-box.active {
+  width: 100%;
+}
+section.quran-section .ayat-box .box {
+  padding: 2em;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+section.quran-section .ayat-box .box button.close {
+  background: transparent;
+  border: none;
+  font-size: 33px;
+  position: sticky;
+  top: 0;
+}
+section.quran-section .ayat-box .box ul {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+section.quran-section .ayat-box .box ul li {
+  width: 100%;
+  text-align: center;
+  padding-bottom: 10px;
+}
+section.quran-section .ayat-box .box ul li:not(:last-child) {
+  border-bottom: 1px solid #607d8b;
+}
+
+section.hadith-section .hadith-box {
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+  padding: 2em;
+  position: relative;
+}
+section.hadith-section .hadith-box q {
+  display: block;
+  margin-top: 20px;
+  font-size: 22px;
+  overflow-wrap: break-word;
+}
+section.hadith-section .hadith-box .hadith-number {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #607d8b;
+  color: #FFF;
+  padding: 10px;
+}
+section.hadith-section .footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+section.hadith-section .footer button {
+  display: flex;
+  padding: 10px 16px;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  border-radius: 4px;
+  position: relative;
+  min-width: 110px;
+}
+section.hadith-section .footer button span, section.hadith-section .footer button i {
+  z-index: 3;
+}
+section.hadith-section .footer button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 100%;
+  border-radius: 4px;
+  z-index: 1;
+  transition: 0.5s;
+}
+section.hadith-section .footer button.next {
+  background-color: #607d8b;
+  border: 1px solid #607d8b;
+  color: #FFF;
+}
+section.hadith-section .footer button.next::before {
+  left: 0;
+}
+section.hadith-section .footer button.next:hover::before {
+  width: 100%;
+  background-color: #FFF;
+}
+section.hadith-section .footer button.next:hover span, section.hadith-section .footer button.next:hover i {
+  color: #607d8b;
+}
+section.hadith-section .footer button.prev {
+  background-color: transparent;
+  border: 1px solid #607d8b;
+  color: #607d8b;
+}
+section.hadith-section .footer button.prev::before {
+  right: 0;
+}
+section.hadith-section .footer button.prev:hover::before {
+  width: 100%;
+  background-color: #607d8b;
+}
+section.hadith-section .footer button.prev:hover span, section.hadith-section .footer button.prev:hover i {
+  color: #FFF;
+}
+
+section.prayers-section .prayers {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+section.prayers-section .prayers .pray-time {
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+  padding: 1em;
+  width: 32.3333333333%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+}
+section.prayers-section .prayers .pray-time .time {
+  border: 3px solid #607d8b;
+  padding: 15px;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+section.prayers-section .prayers .pray-time .name {
+  font-size: 35px;
+  text-transform: capitalize;
+}
+
+@media (max-width: 1400px) {
+  section.quran-section .surahs-box .surah {
+    width: 11.1111111111%;
+  }
+}
+@media (max-width: 1200px) {
+  section.quran-section .surahs-box .surah {
+    width: 16.6666666667%;
+  }
+}
+@media (max-width: 992px) {
+  section.quran-section .surahs-box .surah {
+    width: 20%;
+  }
+  section.prayers-section .prayers .pray-time {
+    width: 48.5%;
+  }
+  section.prayers-section .prayers .pray-time .name {
+    font-size: 26px;
+  }
+}
+@media (max-width: 768px) {
+  section.quran-section .surahs-box .surah {
+    width: 100%;
+  }
+  section.prayers-section .prayers .pray-time {
+    width: 100%;
+  }
+  section.prayers-section .prayers .pray-time .name {
+    font-size: 26px;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */
