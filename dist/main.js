@@ -59,7 +59,11 @@ browsing.addEventListener('click', () => {
 let surahsBox = document.querySelector('.surahs-box')
 let ayatBox = document.querySelector('.ayat-box');
 let close = document.querySelector('.ayat-box button.close');
+let closeResponsive = document.querySelector('.ayat-box button.close.responsive');
 let ayatBoxList = document.querySelector('.ayat-box ul')
+let ayatBoxListResponsive = document.querySelector('.ayat-box ul.responsive')
+const playAllButton = document.getElementById('play-all');
+const playAllButtonResponsive = document.querySelector('#play-all.responsive');
 getQuranDefinitions();
 function getQuranDefinitions() {
   fetch('https://api.alquran.cloud/v1/quran/ar.alafasy')
@@ -80,18 +84,177 @@ function getQuranDefinitions() {
         document.body.style.overflow = 'hidden';
         let ayat = surahs[index].ayahs
         ayatBoxList.innerHTML = ''
+        ayatBoxListResponsive.innerHTML = ''
+        
+        allAudios = []
         ayat.forEach(ayah => {
           ayatBoxList.innerHTML += `
-            <li>${ayah.numberInSurah}- ${ayah.text}</li>
+            <li>
+              <span>${ayah.numberInSurah}- ${ayah.text}</span>
+              <button class="bg-transparent border-0 play-button" data-audio="${ayah.audio}">
+                <i class="fa-solid fa-play"></i>
+              </button>
+            </li>
           `
+          ayatBoxListResponsive.innerHTML += `
+            <li>
+              <span>${ayah.numberInSurah}- ${ayah.text}</span>
+              <button class="bg-transparent border-0 play-button" data-audio="${ayah.audio}">
+                <i class="fa-solid fa-play"></i>
+              </button>
+            </li>
+          `
+          allAudios.push(new Audio(ayah.audio));
         })
+        let playButtons = document.querySelectorAll('.play-button')
+        playButtons.forEach(button => {
+          button.addEventListener('click', function () {
+            playAudio(this.dataset.audio, button)
+          })
+        })
+        playAllButton.removeAttribute('disabled')
+        playAllButtonResponsive.removeAttribute('disabled')
       })
     }
+    
     close.addEventListener('click', function () {
       ayatBox.classList.remove('active')
       document.body.style.overflow = '';
     })
+
+    closeResponsive.addEventListener('click', function () {
+      ayatBox.classList.remove('active')
+      document.body.style.overflow = '';
+    })
   })
+}
+
+let currentAudio = null
+let currentAllAudio = null
+let allAudios = [];
+function playAudio(url, button) {
+  let playButtons = document.querySelectorAll('.play-button')
+  
+  if (currentAudio && currentAudio.src === url) {
+    currentAudio.pause();
+    currentAudio = null;
+    button.children[0].classList.remove('fa-pause')
+    button.children[0].classList.add('fa-play')
+  } else {
+    if (currentAudio) {
+      currentAudio.pause();
+      playButtons.forEach(button => {
+        button.children[0].classList.remove('fa-pause')
+        button.children[0].classList.add('fa-play')
+      })
+      button.children[0].classList.add('fa-play')
+    }
+    currentAudio = new Audio(url);
+    currentAudio.play();
+    button.children[0].classList.remove('fa-play')
+    button.children[0].classList.add('fa-pause')
+
+    currentAudio.addEventListener('ended', () => {
+      currentAudio = null;
+      button.children[0].classList.remove('fa-pause')
+      button.children[0].classList.add('fa-play')
+    })
+  }
+}
+
+// function playAllAudios(first, currentIndex) {
+//   let audioElement = allAudios[first ? 0 : currentIndex];
+//   audioElement.play();
+
+//   audioElement.addEventListener('ended', function() {
+//     currentIndex++;
+//     if (currentIndex < allAudios.length) {
+//       playAllAudios(false, currentIndex)
+//     }
+//   })
+// }
+
+let isPlaying = false; // Flag to track whether audio is playing
+let isPaused = false;  // Flag to track if audio is paused
+let pausedAudio = null; // Stores the paused audio element
+let pausedIndex = -1; // Tracks the index of the paused audio
+
+
+// Function to play all audios sequentially with pause/resume
+function playAllAudios(first, currentIndex) {
+  
+  let audioElement = allAudios[first ? 0 : currentIndex];
+
+  // Start playing the current audio
+  audioElement.play();
+  playAllButton.setAttribute('disabled', true)
+  playAllButtonResponsive.setAttribute('disabled', true)
+  audioElement.addEventListener('ended', function() {
+    currentIndex++;
+    if (currentIndex < allAudios.length) {
+      playAllAudios(false, currentIndex);
+    }
+  });
+
+  // Store the current audio and index in case we need to pause it later
+  pausedAudio = audioElement;
+  pausedIndex = currentIndex;
+}
+
+// Pause the current audio and track the paused state
+function pauseCurrentAudio() {
+  if (pausedAudio) {
+    pausedAudio.pause();  // Pause the audio
+    isPaused = true;      // Set the paused flag to true
+    isPlaying = false;    // Reset the playing flag
+  }
+}
+
+// Resume the audio if it was paused
+function resumeAudio() {
+  if (pausedAudio) {
+    pausedAudio.play();  // Resume playing the audio
+    isPaused = false;    // Reset the paused flag
+    isPlaying = true;    // Set the playing flag to true
+  }
+}
+
+// Stop the audio completely if you want to restart it
+function stopCurrentAudio() {
+  if (pausedAudio) {
+    pausedAudio.pause();  // Pause the audio
+    pausedAudio.currentTime = 0;  // Reset to the start
+    isPlaying = false;    // Reset the playing flag
+    isPaused = false;     // Reset the paused flag
+  }
+}
+
+setupPlayAllButton()
+function setupPlayAllButton() {
+
+  playAllButton.addEventListener('click', () => {
+    playAllAudios(true, 0);
+  });
+
+  playAllButtonResponsive.addEventListener('click', () => {
+    playAllAudios(true, 0);
+  });
+
+  document.getElementById('pauseButton').addEventListener('click', function() {
+    pauseCurrentAudio();
+  });
+
+  document.querySelector('#pauseButton.responsive').addEventListener('click', function() {
+    pauseCurrentAudio();
+  });
+  
+  document.getElementById('resumeButton').addEventListener('click', function() {
+    resumeAudio();
+  });
+
+  document.querySelector('#resumeButton.responsive').addEventListener('click', function() {
+    resumeAudio();
+  });
 }
 
 // start hadith section
@@ -142,7 +305,6 @@ function getPrayerDefinitions() {
   fetch(`https://api.aladhan.com/v1/timingsByAddress/${today}?address=Cairo,Suez&method=5`)
   .then(response => response.json())
   .then(data => {
-    console.log(data);
     prayerSectionTitle.innerHTML = `مواقيت الصلاة بتاريخ اليوم ${data.data.date.hijri.weekday.ar} ${data.data.date.hijri.day} ${data.data.date.hijri.month.ar} ${data.data.date.hijri.year} | ${data.data.date.readable}`
     prayers.innerHTML = 
     `

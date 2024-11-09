@@ -54,10 +54,28 @@ html(lang="en")
               p سورة الفاتحة
               p fateha
       .ayat-box
-        .box
+        .box.d-none.d-md-flex
           button.close
             i.fa-regular.fa-circle-xmark
           ul.list-unstyled 
+            li 1- الم
+          button#play-all.bg-transparent.border-0.p-0
+            i.fa-regular.fa-circle-play
+          button#pauseButton.bg-transparent.border-0.p-0
+            i.fa-solid.fa-pause
+          button#resumeButton.bg-transparent.border-0.p-0
+            i.fa-solid.fa-play
+        .box.d-md-none
+          .box-header.d-flex.alig-items-center.gap-3
+            button.close.responsive
+              i.fa-regular.fa-circle-xmark
+            button#play-all.bg-transparent.border-0.p-0.responsive
+              i.fa-regular.fa-circle-play
+            button#pauseButton.bg-transparent.border-0.p-0.responsive
+              i.fa-solid.fa-pause
+            button#resumeButton.bg-transparent.border-0.p-0.responsive
+              i.fa-solid.fa-play
+          ul.list-unstyled.responsive
             li 1- الم
     section.hadith-section
       .container
