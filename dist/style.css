@@ -424,6 +424,10 @@ section.prayers-section .prayers .pray-time .name {
   section.quran-section .surahs-box .surah {
     width: 100%;
   }
+  section.quran-section .ayat-box .box {
+    flex-direction: column;
+    align-items: center;
+  }
   section.prayers-section .prayers .pray-time {
     width: 100%;
   }
