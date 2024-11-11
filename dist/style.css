@@ -240,6 +240,9 @@ section.quran-section .surahs-box .surah {
 section.quran-section .surahs-box .surah p {
   margin: 0;
 }
+section.quran-section .surahs-box .surah button.play-surah {
+  font-size: 33px;
+}
 section.quran-section .ayat-box {
   position: fixed;
   top: 0;
@@ -278,18 +281,43 @@ section.quran-section .ayat-box .box ul {
   padding: 0;
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 8px;
 }
 section.quran-section .ayat-box .box ul li {
-  width: 100%;
   text-align: center;
   padding-bottom: 10px;
+  font-family: "Amiri Quran", serif;
 }
-section.quran-section .ayat-box .box ul li:not(:last-child) {
-  border-bottom: 1px solid #607d8b;
+section.quran-section .current-surah-playing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  z-index: 99;
+  width: 100%;
+  bottom: -100%;
+  right: 0;
+  padding: 1em 3em;
+  border-radius: 16px 16px 0 0;
+  background: radial-gradient(circle, rgb(238, 174, 202) 0%, rgb(148, 187, 233) 100%);
+  transition: 0.5s;
+}
+section.quran-section .current-surah-playing.show-player {
+  bottom: 0;
+}
+section.quran-section .current-surah-playing .surah-details h4 {
+  color: #FFF;
+}
+section.quran-section .current-surah-playing .actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+section.quran-section .current-surah-playing .actions button {
+  font-size: 33px;
 }
 
 section.hadith-section .hadith-box {
@@ -432,6 +460,10 @@ section.prayers-section .prayers .pray-time .name {
   section.quran-section .ayat-box .box {
     flex-direction: column;
     align-items: center;
+  }
+  section.quran-section .current-surah-playing {
+    flex-direction: column;
+    gap: 16px;
   }
   section.prayers-section .prayers .pray-time {
     width: 100%;

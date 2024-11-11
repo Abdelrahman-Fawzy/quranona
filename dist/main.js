@@ -36,8 +36,10 @@ headerCloseButton.addEventListener('click', function () {
 let header = document.querySelector('header.navbar')
 let scrollToTop = document.querySelector('button.scroll-to-top')
 window.addEventListener('scroll', () => {
+  let isThereAudio = document.querySelector('.show-player') != null ? true : false
+  
   window.scrollY > 100 ? header.classList.add('active') : header.classList.remove('active')
-  window.scrollY > 500 ? scrollToTop.style.bottom = '20px' : scrollToTop.style.bottom = '-60px'
+  window.scrollY > 500 ? (isThereAudio ? scrollToTop.style.bottom = document.querySelector('.show-player').offsetHeight + 10 + 'px' : scrollToTop.style.bottom = '20px') : scrollToTop.style.bottom = '-60px'
 })
 
 scrollToTop.addEventListener('click', () => {
@@ -64,6 +66,9 @@ let ayatBoxList = document.querySelector('.ayat-box ul')
 let ayatBoxListResponsive = document.querySelector('.ayat-box ul.responsive')
 const playAllButton = document.getElementById('play-all');
 const playAllButtonResponsive = document.querySelector('#play-all.responsive');
+
+let player = document.querySelector('.quran-section .current-surah-playing')
+let closeCurrentPlayer = document.querySelector('.quran-section .current-surah-playing .actions button.close-player')
 getQuranDefinitions();
 function getQuranDefinitions() {
   fetch('https://api.alquran.cloud/v1/quran/ar.alafasy')
@@ -76,10 +81,16 @@ function getQuranDefinitions() {
       <div class="surah">
         <p>${surah.name}</p>
         <p>${surah.englishName}</p>
+        <div class="actions">
+          <button class="play-surah bg-transparent border-0 p-0">
+            <i class="fa-regular fa-circle-play"></i>
+          </button>
+        </div>
       </div>`
     })
+    
     for (let index = 0; index < surahsBox.children.length; index++) {
-      surahsBox.children[index].addEventListener('click', function () {
+      surahsBox.children[index].children[0].addEventListener('click', function () {
         ayatBox.classList.add('active')
         document.body.style.overflow = 'hidden';
         let ayat = surahs[index].ayahs
@@ -115,17 +126,64 @@ function getQuranDefinitions() {
         playAllButton.removeAttribute('disabled')
         playAllButtonResponsive.removeAttribute('disabled')
       })
+      surahsBox.children[index].children[2].children[0].addEventListener('click', function() {
+        player.classList.add('show-player')
+        getSurahsByAfasy(index + 1, surahsBox.children[index].children[0].innerHTML)
+      })
     }
     
     close.addEventListener('click', function () {
       ayatBox.classList.remove('active')
       document.body.style.overflow = '';
+      currentAudio.pause();
+      currentAudio = null;
     })
 
     closeResponsive.addEventListener('click', function () {
       ayatBox.classList.remove('active')
       document.body.style.overflow = '';
     })
+  })
+}
+
+function getSurahsByAfasy(surahIndex, surahName) {
+  fetch('https://www.mp3quran.net/api/v3/reciters?language=ar&reciter=123')
+  .then(response => response.json())
+  .then(data => {
+    let transformedSurahIndex
+    if (surahIndex < 10) transformedSurahIndex = '00' + (surahIndex)
+    else if (surahIndex == 10) transformedSurahIndex = '0' + (surahIndex)
+    else if (surahIndex > 10 && surahIndex < 100) transformedSurahIndex = '0' + (surahIndex)
+    else if (surahIndex >= 100) transformedSurahIndex = (surahIndex);
+    let surahUrl = data.reciters[0].moshaf[1].server+`/${transformedSurahIndex}.mp3`
+    player.innerHTML = `
+      <div class="surah-details">
+        <h4>${surahName}</h4>
+      </div>
+      <div class='d-flex align-items-center gap-3'>
+        <div class="audio">
+          <audio controls="" autoplay>
+            <source src="${surahUrl}" type="audio/mpeg">
+          </audio>
+        </div>
+        <div class="actions">
+          <button id="close-player-button" class="bg-transparent border-0 p-0 close-player"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+    `
+
+    let closePlayerButton = document.getElementById('close-player-button')
+    let audioPlayer = document.querySelector('.audio audio')
+    closePlayerButton.addEventListener('click', function () {
+      player.classList.remove('show-player')
+      surahUrl = null
+      audioPlayer.pause()
+    })
+    audioPlayer.addEventListener('ended', function () {
+      audioPlayer.pause()
+      surahUrl = null
+    })
+    
   })
 }
 
@@ -162,100 +220,6 @@ function playAudio(url, button) {
   }
 }
 
-// function playAllAudios(first, currentIndex) {
-//   let audioElement = allAudios[first ? 0 : currentIndex];
-//   audioElement.play();
-
-//   audioElement.addEventListener('ended', function() {
-//     currentIndex++;
-//     if (currentIndex < allAudios.length) {
-//       playAllAudios(false, currentIndex)
-//     }
-//   })
-// }
-
-let isPlaying = false; // Flag to track whether audio is playing
-let isPaused = false;  // Flag to track if audio is paused
-let pausedAudio = null; // Stores the paused audio element
-let pausedIndex = -1; // Tracks the index of the paused audio
-
-
-// Function to play all audios sequentially with pause/resume
-function playAllAudios(first, currentIndex) {
-  
-  let audioElement = allAudios[first ? 0 : currentIndex];
-
-  // Start playing the current audio
-  audioElement.play();
-  playAllButton.setAttribute('disabled', true)
-  playAllButtonResponsive.setAttribute('disabled', true)
-  audioElement.addEventListener('ended', function() {
-    currentIndex++;
-    if (currentIndex < allAudios.length) {
-      playAllAudios(false, currentIndex);
-    }
-  });
-
-  // Store the current audio and index in case we need to pause it later
-  pausedAudio = audioElement;
-  pausedIndex = currentIndex;
-}
-
-// Pause the current audio and track the paused state
-function pauseCurrentAudio() {
-  if (pausedAudio) {
-    pausedAudio.pause();  // Pause the audio
-    isPaused = true;      // Set the paused flag to true
-    isPlaying = false;    // Reset the playing flag
-  }
-}
-
-// Resume the audio if it was paused
-function resumeAudio() {
-  if (pausedAudio) {
-    pausedAudio.play();  // Resume playing the audio
-    isPaused = false;    // Reset the paused flag
-    isPlaying = true;    // Set the playing flag to true
-  }
-}
-
-// Stop the audio completely if you want to restart it
-function stopCurrentAudio() {
-  if (pausedAudio) {
-    pausedAudio.pause();  // Pause the audio
-    pausedAudio.currentTime = 0;  // Reset to the start
-    isPlaying = false;    // Reset the playing flag
-    isPaused = false;     // Reset the paused flag
-  }
-}
-
-setupPlayAllButton()
-function setupPlayAllButton() {
-
-  playAllButton.addEventListener('click', () => {
-    playAllAudios(true, 0);
-  });
-
-  playAllButtonResponsive.addEventListener('click', () => {
-    playAllAudios(true, 0);
-  });
-
-  document.getElementById('pauseButton').addEventListener('click', function() {
-    pauseCurrentAudio();
-  });
-
-  document.querySelector('#pauseButton.responsive').addEventListener('click', function() {
-    pauseCurrentAudio();
-  });
-  
-  document.getElementById('resumeButton').addEventListener('click', function() {
-    resumeAudio();
-  });
-
-  document.querySelector('#resumeButton.responsive').addEventListener('click', function() {
-    resumeAudio();
-  });
-}
 
 // start hadith section
 let hadithBox = document.querySelector('.hadith-box');
