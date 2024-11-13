@@ -236,6 +236,18 @@ section.main-section {
 
 // start quran section
 section.quran-section {
+  .actions {
+    .readers {
+      flex-basis: 50%;
+      p {
+        flex-basis: 50%;
+        margin: 0;
+      }
+    }
+    .filter {
+      flex-basis: 30%;
+    }
+  }
   .surahs-box {
     display: flex;
     align-items: center;
@@ -255,6 +267,10 @@ section.quran-section {
       cursor: pointer;
       p {
         margin: 0;
+        &:first-child {
+          font-family: "thuluth-decorated";
+          font-size: 24px;
+        }
       }
       button.play-surah {
         font-size: 33px;
@@ -280,8 +296,9 @@ section.quran-section {
       display: flex;
       align-items: flex-start;
       gap: 16px;
-      button.close {
-        background: transparent;
+      button.close,
+      button.close.responsive {
+        background: #FFF;
         border: none;
         font-size: 33px;
         position: sticky;
@@ -517,6 +534,18 @@ section.prayers-section {
     .surahs-box {
       .surah {
         width: 100%;
+      }
+    }
+    .actions {
+      flex-direction: column;
+      .readers,
+      .filter {
+        width: 100%;
+        flex-basis: 100%;
+      }
+      .readers {
+        flex-direction: column;
+        gap: 12px;
       }
     }
     .ayat-box {

@@ -218,6 +218,16 @@ section.main-section .overlay {
   background-color: rgba(0, 0, 0, 0.6);
 }
 
+section.quran-section .actions .readers {
+  flex-basis: 50%;
+}
+section.quran-section .actions .readers p {
+  flex-basis: 50%;
+  margin: 0;
+}
+section.quran-section .actions .filter {
+  flex-basis: 30%;
+}
 section.quran-section .surahs-box {
   display: flex;
   align-items: center;
@@ -239,6 +249,10 @@ section.quran-section .surahs-box .surah {
 }
 section.quran-section .surahs-box .surah p {
   margin: 0;
+}
+section.quran-section .surahs-box .surah p:first-child {
+  font-family: "thuluth-decorated";
+  font-size: 24px;
 }
 section.quran-section .surahs-box .surah button.play-surah {
   font-size: 33px;
@@ -264,8 +278,9 @@ section.quran-section .ayat-box .box {
   align-items: flex-start;
   gap: 16px;
 }
-section.quran-section .ayat-box .box button.close {
-  background: transparent;
+section.quran-section .ayat-box .box button.close,
+section.quran-section .ayat-box .box button.close.responsive {
+  background: #FFF;
   border: none;
   font-size: 33px;
   position: sticky;
@@ -456,6 +471,18 @@ section.prayers-section .prayers .pray-time .name {
 @media (max-width: 768px) {
   section.quran-section .surahs-box .surah {
     width: 100%;
+  }
+  section.quran-section .actions {
+    flex-direction: column;
+  }
+  section.quran-section .actions .readers,
+  section.quran-section .actions .filter {
+    width: 100%;
+    flex-basis: 100%;
+  }
+  section.quran-section .actions .readers {
+    flex-direction: column;
+    gap: 12px;
   }
   section.quran-section .ayat-box .box {
     flex-direction: column;

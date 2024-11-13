@@ -45,13 +45,18 @@ html(lang="en")
           button.browsing
             span ابدأ التصفح
             i.fa-solid.fa-caret-left
-    //- audio(controls='' autoplay)
-    //-   source(src='https://server8.mp3quran.net/afs/114.mp3' type='audio/mpeg')
     section.quran-section
       .container
         .flex-box
           .header
             h3 القرآن الكريم
+          .actions.d-flex.align-items-center.justify-content-between.gap-3.flex-wrap
+            .readers.d-flex.align-items-center
+              p يمكنك اختيار القراء من هنا
+              select.form-select
+            .filter
+              .form-group
+                input(type="text" class="form-control filter-surah" placeholder="ابحث باسم السورة")
           .surahs-box
             .surah
               p سورة الفاتحة
@@ -72,9 +77,8 @@ html(lang="en")
           //- button#resumeButton.bg-transparent.border-0.p-0
           //-   i.fa-solid.fa-play
         .box.d-md-none
-          .box-header.d-flex.alig-items-center.gap-3
-            button.close.responsive
-              i.fa-regular.fa-circle-xmark
+          button.close.responsive
+            i.fa-regular.fa-circle-xmark
             //- button#play-all.bg-transparent.border-0.p-0.responsive
             //-   i.fa-regular.fa-circle-play
             //- button#pauseButton.bg-transparent.border-0.p-0.responsive

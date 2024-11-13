@@ -9,6 +9,8 @@ let responsiveLinks = document.querySelector('.links.responsive')
 let togglerButton = document.querySelector('header.navbar button.toggler')
 let headerCloseButton = document.querySelector('header.navbar .links.responsive button.close')
 
+if (!localStorage.getItem('reciterId')) localStorage.setItem('reciterId', 123)
+
 links.forEach(link => {
   link.addEventListener('click', () => {
     removeActiveFromLinks();
@@ -59,6 +61,7 @@ browsing.addEventListener('click', () => {
 
 // start quran section
 let surahsBox = document.querySelector('.surahs-box')
+let surahsBoxSurah = document.querySelector('.surahs-box .surah')
 let ayatBox = document.querySelector('.ayat-box');
 let close = document.querySelector('.ayat-box button.close');
 let closeResponsive = document.querySelector('.ayat-box button.close.responsive');
@@ -69,6 +72,50 @@ const playAllButtonResponsive = document.querySelector('#play-all.responsive');
 
 let player = document.querySelector('.quran-section .current-surah-playing')
 let closeCurrentPlayer = document.querySelector('.quran-section .current-surah-playing .actions button.close-player')
+let recitersList = document.querySelector('.readers select.form-select')
+
+getAllReciters()
+function getAllReciters() {
+  
+  fetch('https://mp3quran.net/api/v3/reciters?language=ar&rewaya=1')
+  .then(response => response.json())
+  .then(data => {
+    let reciters = data.reciters.filter(reciters => {
+      return reciters.id == 123 
+            || reciters.id == 112
+            || reciters.id == 118
+            || reciters.id == 121
+            || reciters.id == 102
+            || reciters.id == 20
+            || reciters.id == 217
+            || reciters.id == 259
+            || reciters.id == 286
+            || reciters.id == 30
+            || reciters.id == 5
+            || reciters.id == 51
+            || reciters.id == 54
+            || reciters.id == 76
+            || reciters.id == 92
+    })
+    
+    console.log(reciters);
+    
+    reciters.forEach(reciter => {
+      if (reciter.id == localStorage.getItem('reciterId')) {
+        recitersList.innerHTML += 
+        `<option value="${reciter.id}" selected>${reciter.name}</option>`
+      } else {
+        recitersList.innerHTML += 
+        `<option value="${reciter.id}">${reciter.name}</option>`
+      }
+    })
+  })
+}
+
+recitersList.addEventListener('change', function(event) {
+  localStorage.setItem('reciterId', Number(event.target.value))
+})
+
 getQuranDefinitions();
 function getQuranDefinitions() {
   fetch('https://api.alquran.cloud/v1/quran/ar.alafasy')
@@ -79,7 +126,7 @@ function getQuranDefinitions() {
     surahs.forEach(surah => {
       surahsBox.innerHTML += `
       <div class="surah">
-        <p>${surah.name}</p>
+        <p>${removeTashkeel(surah.name)}</p>
         <p>${surah.englishName}</p>
         <div class="actions">
           <button class="play-surah bg-transparent border-0 p-0">
@@ -128,7 +175,7 @@ function getQuranDefinitions() {
       })
       surahsBox.children[index].children[2].children[0].addEventListener('click', function() {
         player.classList.add('show-player')
-        getSurahsByAfasy(index + 1, surahsBox.children[index].children[0].innerHTML)
+        getSurahs(index + 1, surahsBox.children[index].children[0].innerHTML)
       })
     }
     
@@ -142,20 +189,53 @@ function getQuranDefinitions() {
     closeResponsive.addEventListener('click', function () {
       ayatBox.classList.remove('active')
       document.body.style.overflow = '';
+      currentAudio.pause();
+      currentAudio = null;
     })
   })
 }
 
-function getSurahsByAfasy(surahIndex, surahName) {
-  fetch('https://www.mp3quran.net/api/v3/reciters?language=ar&reciter=123')
+let filterInputBox = document.querySelector('.filter-surah')
+
+filterInputBox.addEventListener('input', function (event) {
+  for (let index = 0; index < surahsBox.children.length; index++) {
+    let arabicWord = removeTashkeel(surahsBox.children[index].children[0].textContent)
+    let englishWord = surahsBox.children[index].children[1].textContent.toLowerCase()
+    if (arabicWord.indexOf(event.target.value) > -1 || englishWord.indexOf(event.target.value) > -1) {
+      surahsBox.children[index].style.display = '';
+    } else {
+      surahsBox.children[index].style.display = 'none';
+    }
+  }
+})
+// function removeTashkeel(text) {
+//   // Remove all Arabic diacritics (covering a broader range of Unicode values)
+//   return text.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, "");
+// }
+
+function removeTashkeel(text) {
+  // Replace alif with wasla (ٱ) with a regular alif (ا)
+  text = text.replace(/\u0671/g, 'ا');
+  
+  // Remove all Arabic diacritics (covering a broad range of Unicode values)
+  return text.replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, "");
+}
+
+function getSurahs(surahIndex, surahName) {
+  let reciterId = localStorage.getItem('reciterId') || 123
+  console.log(reciterId);
+  
+  fetch(`https://www.mp3quran.net/api/v3/reciters?language=ar&reciter=${reciterId}&rewaya=1`)
   .then(response => response.json())
   .then(data => {
+    console.log(data);
+    
     let transformedSurahIndex
     if (surahIndex < 10) transformedSurahIndex = '00' + (surahIndex)
     else if (surahIndex == 10) transformedSurahIndex = '0' + (surahIndex)
     else if (surahIndex > 10 && surahIndex < 100) transformedSurahIndex = '0' + (surahIndex)
     else if (surahIndex >= 100) transformedSurahIndex = (surahIndex);
-    let surahUrl = data.reciters[0].moshaf[1].server+`/${transformedSurahIndex}.mp3`
+    let surahUrl = data.reciters[0].moshaf[0].server+`/${transformedSurahIndex}.mp3`
     player.innerHTML = `
       <div class="surah-details">
         <h4>${surahName}</h4>
@@ -233,10 +313,13 @@ function getHadithDefinitions(page) {
   fetch(apiUrl)
   .then(response => response.json())
   .then(data => {
+    console.log(data.hadiths.data);
+    console.log(data.hadiths.data.filter(hadith => hadith.status == 'Sahih'));
+    
     hadithBox.innerHTML = ''
     hadithBox.innerHTML = `
       <q>${data.hadiths.data[0].hadithArabic}</q>
-      <span>( ${data.hadiths.data[0].status == 'Sahih' ? 'حديث صحيح' : data.hadiths.data[0].status == 'Hasan' ? 'حديث حسن' : 'حديث ضعيف'} )</span>
+      <span>( ${data.hadiths.data[0].status == 'Sahih' || data.hadiths.data[0].status == 'sahih' ? 'حديث صحيح' : data.hadiths.data[0].status == 'Hasan' ? 'حديث حسن' : 'حديث ضعيف'} )</span>
       <div class="hadith-number"><span>${data.hadiths.current_page} / ${data.hadiths.total}</span></div>
     `
   })
